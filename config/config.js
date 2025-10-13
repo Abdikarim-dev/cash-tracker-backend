@@ -1,3 +1,4 @@
+const chalk = require("chalk");
 const { Sequelize } = require("sequelize")
 
 const sequelize = new Sequelize('cash_tracker', 'root', '', {
@@ -6,11 +7,12 @@ const sequelize = new Sequelize('cash_tracker', 'root', '', {
 });
 
 function connectDB() {
+    require("../models/User")
     sequelize.authenticate()
-        .then(() => console.log("Database Connected"))
+        .then(() => console.log(chalk.bold.green("Database Connected")))
         .then(() => sequelize.sync())
-        .then(() => console.log("Tables Synced"))
-        .catch((error) => console.log("Database Error", error))
+        .then(() => console.log(chalk.bold.green("Tables Synced")))
+        .catch((error) => console.log(chalk.bold.red("Database Error:"), chalk.red(error)))
 }
 
 module.exports = { connectDB, sequelize }
