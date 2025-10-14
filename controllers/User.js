@@ -59,12 +59,16 @@ const createUser = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Image uploading technique
+        const imagePath = req.file ? req.file.filename : undefined
+
         const newUser = await Users.create({
             fullname,
             username,
             phone,
             email,
             role,
+            image: imagePath,
             password: hashedPassword,
         });
 
@@ -92,11 +96,14 @@ const updateUser = async (req, res) => {
 
         if (!user) return res.status(404).json({ success: false, message: "User not found " })
 
+        const imagePath = req.file ? req.file.filename : undefined
+
         const updatedUser = await Users.update({
             fullname: fullname,
             username: username,
             phone: phone,
             email: email,
+            image: imagePath,
             role: role,
         },
             {
