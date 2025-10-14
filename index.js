@@ -10,6 +10,8 @@ dotenv.config()
 const userRouter = require("./routes/User")
 
 const PORT = process.env.PORT || 8007
+
+app.use(express.json());
 connectDB()
 
 app.use("/api/user", userRouter)
