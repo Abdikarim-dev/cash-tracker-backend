@@ -14,11 +14,14 @@ const { authenticate, authorize } = require("./middleware/authMiddleware")
 const PORT = process.env.PORT || 8007
 
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+    origin: "http://localhost:5000",
+    credentials: true
+}))
 connectDB()
 
-app.use("/api/auth",authRouter)
-app.use("/api/user",authenticate,authorize("ADMIN"),userRouter) 
+app.use("/api/auth", authRouter)
+app.use("/api/user", authenticate, authorize("ADMIN"), userRouter)
 
 app.listen(PORT, () => {
     console.log(`SERVER IS RUNNING ON :${chalk.yellow(`http://localhost:${PORT}`)}`)

@@ -1,7 +1,7 @@
 const chalk = require("chalk");
 const { Sequelize } = require("sequelize")
 
-const sequelize = new Sequelize('cash_tracker', 'root', '', {
+const sequelize = new Sequelize('cash_tracker_demo', 'root', '', {
     host: 'localhost',
     dialect: "mysql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */
 });
