@@ -3,6 +3,8 @@ const dotenv = require("dotenv")
 const cors = require("cors")
 const chalk = require("chalk")
 
+const path = require("path")
+
 const { connectDB } = require("./config/config")
 const app = express()
 
@@ -13,11 +15,15 @@ const { authenticate, authorize } = require("./middleware/authMiddleware")
 
 const PORT = process.env.PORT || 8007
 
+// Middleware
 app.use(express.json());
 app.use(cors({
     origin: "http://localhost:5000",
     credentials: true
 }))
+
+// Middleware that allows us to share the image folder so the frontend can access it
+app.use("/api/images", express.static(path.join(__dirname,"images")))
 connectDB()
 
 app.use("/api/auth", authRouter)
