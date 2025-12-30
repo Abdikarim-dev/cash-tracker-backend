@@ -57,7 +57,12 @@ const createUser = async (req, res) => {
 
         //   Hashing the password (bcrypt)
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        let hashedPassword;
+        if (password) {
+            if (password.length < 3 || password.length > 20) return res.status(404).json({ success: false, message: "Password must be greater than 2 and less than 21 characters" });
+            hashedPassword = await bcrypt.hash(password, 10);
+        }
+
 
         // Image uploading technique
         const imagePath = req.file ? req.file.filename : undefined
@@ -90,30 +95,25 @@ const updateUser = async (req, res) => {
     try {
         const id = parseInt(req.params.id)
 
-        const { fullname, username, phone, email, role } = req.body;
+        const { fullname, username, phone, email, role, password } = req.body;
 
         const user = await Users.findByPk(id)
 
         if (!user) return res.status(404).json({ success: false, message: "User not found " })
 
-        const imagePath = req.file ? req.file.filename : undefined
+        const updatedData = { fullname, username, phone, email, role };
 
-        const updatedUser = await Users.update({
-            fullname: fullname,
-            username: username,
-            phone: phone,
-            email: email,
-            image: imagePath,
-            role: role,
-        },
-            {
-                where: { id }
-            }
-        );
+        if (req.file) updatedData.image = req.file.filename
+
+        if (password) {
+            if (password.length < 3 || password.length > 20) return res.status(404).json({ success: false, message: "Password must be greater than 2 and less than 21 characters" });
+            updatedData.password = await bcrypt.hash(password, 10);
+        }
+
+        await Users.update(updatedData, { where: { id } });
         res.status(200).json({
             success: true,
-            message: "a user has been updated successfully ",
-            data: updatedUser,
+            message: "User has been updated successfully ",
         });
     } catch (error) {
         res.status(400).json({
